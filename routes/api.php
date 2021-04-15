@@ -19,5 +19,5 @@ Route::group(['prefix' => 'v1'], function() {
     //<--------PLAYER CONTROLLER-------->
     Route::post('/register/player',     'PlayerController@registerPlayer');
     Route::post('/login',               'PlayerController@login');
-    Route::post('/update/info',         'PlayerController@updatePlayerInfo');
+    Route::post('/update/info',         'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
 });
