@@ -20,4 +20,8 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/register/player',     'PlayerController@registerPlayer');
     Route::post('/login',               'PlayerController@login');
     Route::post('/update/info',         'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
+
+    //<--------RAFFLES CONTROLLER-------->
+    Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
+
 });

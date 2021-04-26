@@ -9,6 +9,7 @@ use App\Models\Player;
 use Response;
 use Auth;
 use Config;
+
 class PlayerController extends Controller
 {
     public function __construct() {
@@ -52,7 +53,7 @@ class PlayerController extends Controller
             200
         );
     }
-   
+
     public function updatePlayerInfo(Request $request) {
         $info = $request->all();
         $player = Player::find($info['playerId']);

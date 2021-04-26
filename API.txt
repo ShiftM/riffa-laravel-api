@@ -1,0 +1,17 @@
+<------------PLAYER CONTROLLER------------>
+
+*** api/v1/register/player
+- for player registration
+
+*** api/v1/update/info
+- will update player information
+
+*** api/v1/login
+- will login player
+
+
+<------------RAFFLES CONTROLLER------------>
+
+*** api/v1/raffles/schedule/{id}
+- will get raffles information and schedule
+
