@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class RafflesSchedule extends Model
+class RaffleSlots extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
-    protected $primaryKey   = 'schedule_id';
+    protected $primaryKey   = 'slots_id';
     public $timestamps      = false;
-
-    protected $dateFormat = 'Y-m-d';
 
 }

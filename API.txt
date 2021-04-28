@@ -9,9 +9,20 @@
 *** api/v1/login
 - will login player
 
+<--------COINS - PLAYER CONTROLLER-------->
+
+*** api/v1/coins/{id}
+- will show coin balance of player {player_id}
+
 
 <------------RAFFLES CONTROLLER------------>
 
+*** api/v1/raffles/
+- will show all raffles available
+
 *** api/v1/raffles/schedule/{id}
-- will get raffles information and schedule
+- will get raffles information and schedule {raffle_id}
+
+*** api/v1/raffles/slots/{id}
+- will get all slots taken in a specific raffle {raffle_id}
 

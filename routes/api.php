@@ -17,11 +17,16 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function() {
 
     //<--------PLAYER CONTROLLER-------->
-    Route::post('/register/player',     'PlayerController@registerPlayer');
-    Route::post('/login',               'PlayerController@login');
-    Route::post('/update/info',         'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
+    Route::post('/register/player',         'PlayerController@registerPlayer');
+    Route::post('/login',                   'PlayerController@login');
+    Route::post('/update/info',             'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
+
+    //<--------COINS - PLAYER CONTROLLER-------->
+    Route::get('/coins/{id}',               'PlayerController@showCoinBalance');
 
     //<--------RAFFLES CONTROLLER-------->
+    Route::get('raffles/',                  'RafflesController@showAllRaffles');
     Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
+    Route::get('raffles/slots/{id}',        'RafflesController@showTakenSlots');
 
 });
