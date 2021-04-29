@@ -10,34 +10,54 @@ use Response;
 
 class RafflesController extends Controller
 {
-    public function showAllRaffles()
-    {
-        $raffle_info = Raffles::all();
-
+    public function showAllRaffles() {
+        $raffles = Raffles::with('schedule')->get();
 
         return Response::json(
             [
-                'raffles_info' => $raffle_info,
+                'raffles' => $raffles
             ],
-            200
         );
     }
 
     public function showRaffleInfo($id)
     {
-        $raffle_schedule = RafflesSchedule::where([
-            ['raffle_id', $id],
-        ])->first();
-
-        $raffle_info = Raffles::where([
-            ['raffle_id', $id],
-        ])->first();
-
+        $raffle = Raffles::with(['schedule' => function($query) use ($id) {
+            $query->where([
+                ['raffle_id', $id]
+            ]);
+        }])->get();
 
         return Response::json(
             [
-                'raffles_schedule' => $raffle_schedule,
-                'raffles_info' => $raffle_info,
+                'raffle' => $raffle,
+            ],
+            200
+        );
+    }
+
+    public function insertRaffleInfo(Request $request) {
+        $raffle_info = new Raffles([
+            'raffle_name' => $request->raffle_name,
+            'raffle_desc' => $request->raffle_desc,
+            'slots'       => $request->slots,
+            'created_at'  => time()
+        ]);
+        $raffle_info->save();
+
+        if($raffle_info != null) {
+            $raffle_schedule = new RafflesSchedule([
+                'raffle_id' => $raffle_info->raffle_id,
+                'start_schedule' => time(),
+                'end_schedule' => time(),
+                'created_at' => time()
+            ]);
+            $raffle_schedule->save();
+        }
+
+        return Response::json(
+            [
+                'raffle_info' => $raffle_info
             ],
             200
         );

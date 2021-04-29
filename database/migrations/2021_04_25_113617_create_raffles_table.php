@@ -16,10 +16,11 @@ class CreateRafflesTable extends Migration
         Schema::create('raffles', function (Blueprint $table) {
             $table->increments('raffle_id');
             $table->string('raffle_name');
-            $table->string('raffle_desc');
+            $table->string('raffle_desc')->nullable();
             $table->string('image')->nullable();
-            $table->string('start_number');
-            $table->string('end_number');
+            $table->integer('slots');
+            $table->integer('created_at');
+            $table->integer('updated_at')->nullable();
         });
     }
 
