@@ -15,11 +15,12 @@ class CreateRafflesSchedulesTable extends Migration
     {
         Schema::create('raffles_schedules', function (Blueprint $table) {
             $table->increments('schedule_id');
-            $table->integer('raffle_id');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->integer('raffle_id')->unsigned();
+            $table->foreign('raffle_id')->references('raffle_id')->on('raffles');
+            $table->integer('start_schedule');
+            $table->integer('end_schedule');
+            $table->integer('created_at');
+            $table->integer('updated_at')->nullable();
         });
     }
 
