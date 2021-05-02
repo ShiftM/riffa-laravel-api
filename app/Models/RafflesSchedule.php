@@ -9,9 +9,15 @@ class RafflesSchedule extends Model
 {
     use HasFactory;
 
+    const CREATED_AT        = 'created_at';
+    const UPDATED_AT        = 'updated_at';
+
     protected $primaryKey   = 'schedule_id';
     public $timestamps      = false;
+    protected $guarded      = [];
 
-    protected $dateFormat = 'Y-m-d';
+    public function raffle() {
+        return $this->belongsTo('App\Models\Raffles', 'raffle_id');
+    }
 
 }

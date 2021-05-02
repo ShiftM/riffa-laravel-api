@@ -12,5 +12,10 @@ class Raffles extends Model
 
     protected $primaryKey   = 'raffle_id';
     public $timestamps      = false;
+    protected $guarded      = [];
+
+    public function schedule() {
+        return $this->belongsTo('App\Models\RafflesSchedule', 'raffle_id');
+    }
 
 }

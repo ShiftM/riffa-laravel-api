@@ -25,10 +25,11 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/coins/{id}',               'PlayerController@showCoinBalance');
 
     //<--------RAFFLES CONTROLLER-------->
-    Route::get('raffles/',                  'RafflesController@showAllRaffles');
+    Route::get('/all/raffles',              'RafflesController@showAllRaffles');
     Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
     Route::get('raffles/slots/{id}',        'RafflesController@showTakenSlots');
-    Route::post('raffles/take_slot/',       'RafflesController@takeSlot');
-    Route::post('raffles/end/',             'RafflesController@endRaffle');
+    Route::post('raffles/take_slot/',       'RafflesController@saveSelectedSlot');
+    Route::post('end/raffles/',             'RafflesController@endRaffle');
+    Route::post('/add/raffle-info',         'RafflesController@insertRaffleInfo');
 
 });
