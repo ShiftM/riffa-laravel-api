@@ -15,7 +15,8 @@ class CreateCoinsTransactionsTable extends Migration
     {
         Schema::create('coins_transactions', function (Blueprint $table) {
             $table->increments('transaction_id');
-            $table->integer('coins_id');
+            $table->integer('coins_id')->unsigned();
+            $table->foreign('coins_id')->references('coins_id')->on('coins');
             $table->string('transaction_type');
             $table->date('date');
         });

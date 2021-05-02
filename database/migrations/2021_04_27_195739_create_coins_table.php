@@ -15,7 +15,8 @@ class CreateCoinsTable extends Migration
     {
         Schema::create('coins', function (Blueprint $table) {
             $table->increments('coins_id');
-            $table->integer('player_id');
+            $table->integer('player_id')->unsigned();
+            $table->foreign('player_id')->references('player_id')->on('players');
             $table->integer('coins')->nullable();
             $table->date('last_update');
             $table->timestamps();

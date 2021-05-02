@@ -10,7 +10,8 @@ class CoinsTransaction extends Model
 {
     use HasFactory,Notifiable;
 
-    protected $primaryKey   = 'raffle_id';
+    protected $primaryKey   = 'transaction_id';
     public $timestamps      = false;
+    protected $guarded      = [];
 
 }

@@ -12,5 +12,6 @@ class RaffleSlots extends Model
 
     protected $primaryKey   = 'slots_id';
     public $timestamps      = false;
+    protected $guarded      = [];
 
 }
