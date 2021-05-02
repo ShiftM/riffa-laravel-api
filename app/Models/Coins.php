@@ -10,7 +10,8 @@ class Coins extends Model
 {
     use HasFactory,Notifiable;
 
-    protected $primaryKey   = 'raffle_id';
+    protected $primaryKey   = 'coins_id';
     protected $dateFormat = 'Y-m-d';
+    protected $guarded      = [];
 
 }

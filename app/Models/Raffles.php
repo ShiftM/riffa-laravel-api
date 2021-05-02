@@ -17,4 +17,5 @@ class Raffles extends Model
     public function schedule() {
         return $this->belongsTo('App\Models\RafflesSchedule', 'raffle_id');
     }
+
 }

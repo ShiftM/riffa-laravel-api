@@ -19,4 +19,5 @@ class Player extends Authenticatable
     protected $primaryKey   = 'player_id';
     public $timestamps      = false;
     protected $guarded      = [];
+
 }
