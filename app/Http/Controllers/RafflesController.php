@@ -6,6 +6,7 @@ use App\Models\Raffles;
 use App\Models\RaffleSlots;
 use App\Models\RafflesSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class RafflesController extends Controller
@@ -47,6 +48,7 @@ class RafflesController extends Controller
     {
         $raffle_slots = RaffleSlots::where([
             ['raffle_id', $id],
+            ['status', '1']
         ])->get();
 
 
@@ -57,4 +59,52 @@ class RafflesController extends Controller
             200
         );
     }
+
+    public function takeSlot(Request $request) {
+
+        $raffle_slots = RaffleSlots::where([
+            ['raffle_id', $request->raffle_id],
+            ['slot_number', $request->slot_number],
+            ['status', '1']
+        ])->first();
+
+        if($raffle_slots==null) {
+            $taken_slot = new RaffleSlots([
+                'raffle_id'     => $request->raffle_id,
+                'player_id'     => $request->player_id,
+                'price_id'      => $request->price_id,
+                'slot_number'   => $request->slot_number,
+                'status'        => "1"
+            ]);
+
+            if($taken_slot->save()){
+                return response('Successful', 200)
+                ->header('Content-Type', 'text/plain');
+            }
+            else {
+                return response('Failed', 200)
+                ->header('Content-Type', 'text/plain');
+            }
+        } else {
+            return response('Slot Taken', 200)
+                ->header('Content-Type', 'text/plain');
+        }
+
+    }
+
+    public function endRaffle(Request $request)
+    {
+        if($raffle_slots = RaffleSlots::where([
+            ['raffle_id', $request->raffle_id],
+            ['status', '1']
+        ])->update(array('status' => 0))) {
+            return response('Successful', 200)
+                ->header('Content-Type', 'text/plain');
+        } else {
+            return response('Failed/Already Updated', 200)
+                ->header('Content-Type', 'text/plain');
+        }
+
+    }
+
 }

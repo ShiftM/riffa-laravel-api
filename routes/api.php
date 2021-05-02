@@ -28,5 +28,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('raffles/',                  'RafflesController@showAllRaffles');
     Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
     Route::get('raffles/slots/{id}',        'RafflesController@showTakenSlots');
+    Route::post('raffles/take_slot/',       'RafflesController@takeSlot');
+    Route::post('raffles/end/',             'RafflesController@endRaffle');
 
 });
