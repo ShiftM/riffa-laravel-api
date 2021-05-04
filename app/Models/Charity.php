@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Raffles extends Model
+class Charity extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $primaryKey   = 'raffle_id';
+    protected $primaryKey   = 'charity_id';
+    public $timestamps      = false;
     protected $guarded      = [];
-
-    public function schedule() {
-        return $this->belongsTo('App\Models\RafflesSchedule', 'raffle_id');
-    }
-
 }

@@ -26,10 +26,13 @@ Route::group(['prefix' => 'v1'], function() {
 
     //<--------RAFFLES CONTROLLER-------->
     Route::get('/all/raffles',              'RafflesController@showAllRaffles');
-    Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
-    Route::get('raffles/slots/{id}',        'RafflesController@showTakenSlots');
-    Route::post('raffles/take_slot/',       'RafflesController@saveSelectedSlot');
-    Route::post('end/raffles/',             'RafflesController@endRaffle');
-    Route::post('/add/raffle-info',         'RafflesController@insertRaffleInfo');
+    Route::get('/raffles/info/{raffle_id}', 'RafflesController@showRaffleInfo');
+    Route::get('/raffles/taken/{raffle_id}','RafflesController@showTakenSlots');
+    Route::post('/take/raffle/',            'RafflesController@saveSelectedSlot');
+    Route::post('/end/raffle/',             'RafflesController@endRaffle');
+    Route::post('/add/raffle',              'RafflesController@insertRaffleInfo');
+
+    //<--------PRIZES CONTROLLER-------->
+    Route::get('/all/prizes',               'PrizeController@showAllPrizes');
 
 });

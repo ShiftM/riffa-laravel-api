@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ImageController;
-use App\Models\Coins;
 use App\Models\Player;
 use Response;
 use Auth;
@@ -81,18 +80,18 @@ class PlayerController extends Controller
         );
     }
 
-    public function showCoinBalance($id) {
-        $coins = Coins::where([
-            ['player_id', $id],
-        ])->first();
+    // public function showCoinBalance($id) {
+    //     $coins = Coins::where([
+    //         ['player_id', $id],
+    //     ])->first();
 
-        return Response::json(
-            [
-                'coins' => $coins
-            ],
-            200
-        );
+    //     return Response::json(
+    //         [
+    //             'coins' => $coins
+    //         ],
+    //         200
+    //     );
 
-    }
+    // }
 
 }

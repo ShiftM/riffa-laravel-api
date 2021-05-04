@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoinsTable extends Migration
+class CreateRaffleSlotsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateCoinsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coins', function (Blueprint $table) {
-            $table->increments('coins_id');
+        Schema::create('raffle_slots', function (Blueprint $table) {
+            $table->increments('slots_id');
+            $table->integer('raffle_id')->unsigned();
             $table->integer('player_id')->unsigned();
+            $table->foreign('raffle_id')->references('raffle_id')->on('raffles');
             $table->foreign('player_id')->references('player_id')->on('players');
-            $table->integer('coins')->nullable();
-            $table->date('last_update');
-            $table->timestamps();
+            $table->integer('slot_number');
+            $table->boolean('is_winner')->nullable()->default(0);
         });
     }
 
@@ -30,6 +31,6 @@ class CreateCoinsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coins');
+        Schema::dropIfExists('raffle_slots');
     }
 }
