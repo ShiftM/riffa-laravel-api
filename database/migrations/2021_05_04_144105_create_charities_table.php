@@ -19,6 +19,7 @@ class CreateCharitiesTable extends Migration
             $table->string('description');
             $table->string('contact_person');
             $table->string('contact_number');
+            $table->string('image')->nullable();
             $table->boolean('is_active')->nullable()->default(1);
         });
     }

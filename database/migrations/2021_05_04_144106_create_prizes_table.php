@@ -16,8 +16,9 @@ class CreatePrizesTable extends Migration
         Schema::create('prizes', function (Blueprint $table) {
             $table->increments('prize_id');
             $table->string('name');
+            $table->integer('coin_price');
             $table->string('description')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
         });
     }
 

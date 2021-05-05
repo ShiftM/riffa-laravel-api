@@ -24,6 +24,10 @@ Route::group(['prefix' => 'v1'], function() {
     //<--------TICKET CONTROLLER-------->
     Route::get('/balance/ticket/{player_id}',   'TIcketController@showTicketBalance');
     Route::post('/add/ticket/',                 'TIcketController@addTicket');
+    Route::post('/subtract/ticket/',            'TIcketController@subtractTicket');
+
+     //<--------COIN CONTROLLER-------->
+     Route::get('/balance/coins/{player_id}',   'TIcketController@showCoinBalance');
 
     //<--------RAFFLES CONTROLLER-------->
     Route::get('/all/raffles',                  'RafflesController@showAllRaffles');

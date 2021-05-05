@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Charity;
+use App\Models\Coins;
+use App\Models\Player;
 use App\Models\Prizes;
 use App\Models\Raffles;
 use App\Models\RaffleSlots;
 use App\Models\RafflesSchedule;
+use App\Models\TicketTransaction;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,17 +17,29 @@ use Response;
 
 class RafflesController extends Controller
 {
+
+    public function __construct() {
+        $this->enterRaffle = new TicketController();
+    }
+
     public function showAllRaffles() {
         $raffles = Raffles::with('schedule')->get();
-        $prize = Prizes::where([
-            ['prize_id', $raffles[0]->prize_id]
-        ])->get('name');
-        $charity = Charity::where([
-            ['charity_id', $raffles[0]->charity_id]
-        ])->get('charity_name');
 
-        $raffles[0]['prize_name'] = $prize[0]['name'];
-        $raffles[0]['charity_name'] = $charity[0]['charity_name'];
+        foreach($raffles as $raffle) {
+            $prize = Prizes::where([
+                ['prize_id', $raffle->prize_id]
+            ])->first('name');
+            $charity = Charity::where([
+                ['charity_id', $raffle->charity_id]
+            ])->first('charity_name');
+
+            $raffle['prize_name'] = $prize['name'];
+
+            if(isset($charity['charity_name'])) {
+                $raffle['charity_name'] = $charity['charity_name'];
+            }
+        }
+
 
         return $raffles;
     }
@@ -102,7 +117,7 @@ class RafflesController extends Controller
 
         return Response::json(
             [
-                'raffle_info' => $raffles
+                'raffle_info' => $raffle
             ],
             200
         );
@@ -137,11 +152,17 @@ class RafflesController extends Controller
                 'slot_number'   => $request->slot_number
             ]);
 
-            if($taken_slot->save()){
-                return response('Successful', 200);
-            }
-            else {
-                return response('Failed', 200);
+            if($this->enterRaffle->enterRaffle($request->player_id, 'Raffle Entry') == 'Deducted'){
+
+                if($taken_slot->save()){
+                    return response('Successful', 200);
+                }
+                else {
+                    return response('Failed', 200);
+                }
+
+            } else {
+                return $this->enterRaffle->enterRaffle($request->player_id, 'Raffle Entry');
             }
         } else {
             return response('Slot Taken', 200);
@@ -149,16 +170,44 @@ class RafflesController extends Controller
 
     }
 
-    public function endRaffle(Request $request)
-    {
+    public function endRaffle(Request $request) {
+
         if($raffles = Raffles::with('schedule')->where([
             ['raffle_id', $request->raffle_id],
             ['is_active', 1]
         ])->update(['is_active' => 0])) {
-            return response('Successful', 200);
+            if($this->giveConsolationCoins($request->raffle_id) == "Done"){
+                return response('Successful', 200);
+            }
         } else {
             return response('Failed/Already Updated', 200);
         }
+
+    }
+
+    public function giveConsolationCoins($raffle_id) {
+
+        $raffle_slots = RaffleSlots::where([
+            ['raffle_id', $raffle_id],
+            ['is_winner', 0]
+        ])->get(DB::raw('DISTINCT(player_id)'));
+
+        foreach($raffle_slots as $raffle_slot) {
+            $player = Coins::where('player_id', $raffle_slot->player_id)->first();
+            $player->update([
+                    'coin_balance' => $player->coin_balance + 100 ,
+                    'last_update'  => time()
+                ]);
+
+            $ticket_transaction = new TicketTransaction([
+                'coin_id' => $player->coin_id,
+                'description' => 'Consolation Prize',
+                'date' => time()
+            ]);
+            $ticket_transaction->save();
+        }
+
+        return 'Done';
 
     }
 

@@ -23,7 +23,7 @@ class CreateRafflesTable extends Migration
             $table->string('raffle_desc')->nullable();
             $table->string('image')->nullable();
             $table->integer('slots');
-            $table->integer('slot_price');
+            $table->integer('slot_price')->nullable()->default(1);
             $table->boolean('is_active')->nullable()->default(1);
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
