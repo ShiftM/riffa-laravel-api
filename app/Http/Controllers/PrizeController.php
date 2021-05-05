@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\PrizeCategories;
 use App\Models\Prizes;
 use Illuminate\Http\Request;
+use Response;
 
 use function Ramsey\Uuid\v1;
 
@@ -40,11 +41,5 @@ class PrizeController extends Controller
 
         return $prizeList;
 
-        // return Response::json(
-        //     [
-        //         'prizeList' => $$prizeList
-        //     ],
-        //     200
-        // );
     }
 }

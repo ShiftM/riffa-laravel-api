@@ -14,6 +14,7 @@ class Player extends Authenticatable
 
     protected $guard        = 'players';
     protected $primaryKey   = 'player_id';
+    public $timestamps      = false;
     protected $guarded      = [];
 
 }

@@ -18,7 +18,7 @@ class CreateTicketsTable extends Migration
             $table->integer('player_id')->unsigned();
             $table->foreign('player_id')->references('player_id')->on('players');
             $table->integer('ticket_balance');
-            $table->date('last_update');
+            $table->integer('last_update');
         });
     }
 

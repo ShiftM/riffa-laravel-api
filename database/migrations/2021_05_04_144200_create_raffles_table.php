@@ -25,7 +25,8 @@ class CreateRafflesTable extends Migration
             $table->integer('slots');
             $table->integer('slot_price');
             $table->boolean('is_active')->nullable()->default(1);
-            $table->timestamps();
+            $table->integer('created_at');
+            $table->integer('updated_at')->nullable();
         });
     }
 

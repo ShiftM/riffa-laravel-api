@@ -49,10 +49,11 @@ class RafflesController extends Controller
             'prize_id'      =>       $info['prize_id'],
             'charity_id'    =>       isset($info['charity_id']) ? $info['charity_id'] : null,
             'raffle_name'   =>       $info['raffle_name'],
-            'image'         =>       isset($info['image']) ? (strpos($info['image'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.RAFFLE'), '', $info['image']) == $raffle_info['image'] ? str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['profile']) : $this->image->uploadImage($info['profile'])) : "" ) : "",
+            'image'         =>       isset($info['image']) ? (strpos($info['image'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.RAFFLE'), '', $info['image']) == $raffle_info['image'] ? str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['image']) : $this->image->uploadImage($info['image'])) : "" ) : "",
             'raffle_desc'   =>       isset($info['raffle_desc']) ? $info['raffle_desc'] : null,
             'slots'         =>       $info['slots'],
-            'slot_price'    =>       $info['slot_price']
+            'slot_price'    =>       $info['slot_price'],
+            'created_at'    =>       time()
         ]);
         $raffle_info->save();
 
@@ -69,6 +70,39 @@ class RafflesController extends Controller
             [
                 'raffle_info' => $raffle_info,
                 'raffle_schedule' => $raffle_schedule
+            ],
+            200
+        );
+    }
+
+    public function editRaffleInfo(Request $request) {
+        $info = $request->all();
+        $raffles = Raffles::with('schedule')->where('raffle_id', $info['raffle_id'])->get();
+        $raffle = Raffles::where('raffle_id', $info['raffle_id'])->update([
+            'prize_id'      =>       $info['prize_id'],
+            'charity_id'    =>       isset($info['charity_id']) ? $info['charity_id'] : null,
+            'raffle_name'   =>       $info['raffle_name'],
+            'image'         =>       isset($info['image']) != null ? (strpos($info['image'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.RAFFLE'), '', $info['image']) == $raffles['image'] ? str_replace(Config::get('constants.RIFFA_S3_URL.RAFFLE'), '', $info['image']) : $this->image->uploadImage($info['image'])) : "" ) : "",
+            'raffle_desc'   =>       isset($info['raffle_desc']) ? $info['raffle_desc'] : null,
+            'slots'         =>       $info['slots'],
+            'slot_price'    =>       $info['slot_price'],
+            'updated_at'    =>       time()
+        ]);
+        if(isset($info['image']) != null) {
+            $raffle['image'] = Config::get('constants.RIFFA_S3_URL.RAFFLE').$raffle['image'];
+        }
+
+        $raffle_schedule = RafflesSchedule::find($info['raffle_id']);
+
+        $raffle_schedule->update([
+            'raffle_id' => $info['raffle_id'],
+            'start_schedule' => $info['start_schedule'],
+            'end_schedule' => $info['end_schedule']
+        ]);
+
+        return Response::json(
+            [
+                'raffle_info' => $raffles
             ],
             200
         );

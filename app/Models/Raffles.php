@@ -11,6 +11,7 @@ class Raffles extends Model
     use HasFactory, Notifiable;
 
     protected $primaryKey   = 'raffle_id';
+    public $timestamps      = false;
     protected $guarded      = [];
 
     public function schedule() {

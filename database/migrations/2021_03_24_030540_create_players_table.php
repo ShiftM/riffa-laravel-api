@@ -27,7 +27,8 @@ class CreatePlayersTable extends Migration
             $table->integer('birthdate')->length(10)->nullable();
             $table->string('role')->length(5);
             $table->boolean('is_active')->nullable()->default(1);
-            $table->timestamps();
+            $table->integer('created_at');
+            $table->integer('updated_at')->nullable();
         });
     }
 

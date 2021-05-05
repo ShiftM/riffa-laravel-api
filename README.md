@@ -29,11 +29,18 @@
 >email \
 >password
 
-### COIN CONTROLLER
+### TICKET CONTROLLER
 
-##### `api/v1/coins/{id}`
+##### `api/v1/balance/ticket/{player_id}`
 
 * Will show coin balance of player `{player_id}`
+
+##### `api/v1/add/ticket/`
+
+* Will add or update coin balance of player. Require following parameters:
+>player_id \
+>description \
+>ticket_balance 
 
 
 ### RAFFLE CONTROLLER
@@ -41,6 +48,19 @@
 ##### `api/v1/add/raffle`
 
 * Will add new raffle entry. Require following parameters:
+>prize_id \
+>charity_id ***(nullable)***\
+>raffle_name \
+>raffle_desc ***(nullable)***\
+>image ***(nullable)***\
+>slots \
+>slot_price \
+>start_schedule \
+>end_schedule
+
+##### `api/v1/edit/raffle`
+
+* Will update selected raffle entry. Require following parameters:
 >prize_id \
 >charity_id ***(nullable)***\
 >raffle_name \
