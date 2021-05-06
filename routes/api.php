@@ -26,19 +26,27 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/add/ticket/',                 'TIcketController@addTicket');
     Route::post('/subtract/ticket/',            'TIcketController@subtractTicket');
 
-     //<--------COIN CONTROLLER-------->
-     Route::get('/balance/coins/{player_id}',   'TIcketController@showCoinBalance');
+    //<--------COIN CONTROLLER-------->
+    Route::get('/balance/coins/{player_id}',    'CoinController@showCoinBalance');
 
     //<--------RAFFLES CONTROLLER-------->
     Route::get('/all/raffles',                  'RafflesController@showAllRaffles');
     Route::get('/raffles/info/{raffle_id}',     'RafflesController@showRaffleInfo');
     Route::get('/raffles/taken/{raffle_id}',    'RafflesController@showTakenSlots');
+
     Route::post('/take/raffle/',                'RafflesController@saveSelectedSlot');
+    Route::post('/start/raffle/',               'RafflesController@startRaffle');
     Route::post('/end/raffle/',                 'RafflesController@endRaffle');
     Route::post('/add/raffle',                  'RafflesController@insertRaffleInfo');
     Route::post('/edit/raffle',                 'RafflesController@editRaffleInfo');
 
     //<--------PRIZES CONTROLLER-------->
     Route::get('/all/prizes',                   'PrizeController@showAllPrizes');
+    Route::post('/add/prize',                   'PrizeController@newPrize');
+    Route::post('/edit/prize',                  'PrizeController@editPrize');
+    Route::post('/remove/prize',                'PrizeController@removePrize');
+
+    //<--------TRANSACTION CONTROLLER-------->
+    Route::get('/all/transactions',             'TransactionController@showAllTransactions');
 
 });

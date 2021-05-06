@@ -19,7 +19,8 @@ class CreateTicketTransactionsTable extends Migration
             $table->foreign('ticket_id')->references('ticket_id')->on('tickets');
             $table->integer('coin_id')->unsigned()->nullable();
             $table->foreign('coin_id')->references('coin_id')->on('coins');
-            $table->string('description');
+            $table->string('title');
+            $table->string('type');
             $table->integer('date');
         });
     }

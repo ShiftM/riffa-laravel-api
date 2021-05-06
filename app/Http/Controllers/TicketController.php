@@ -34,7 +34,9 @@ class TicketController extends Controller
 
         $ticket_transaction = new TicketTransaction([
             'ticket_id' => $ticket->ticket_id,
-            'description' => $request->description . " (". $request->ticket_balance .")",
+            // 'description' => $request->description . " (". $request->ticket_balance .")",
+            'title' => $request->ticket_balance . " Tickets",
+            'type' => "Ticket",
             'date' => time()
         ]);
         $ticket_transaction->save();
@@ -59,7 +61,8 @@ class TicketController extends Controller
 
         $ticket_transaction = new TicketTransaction([
             'ticket_id' => $ticket->ticket_id,
-            'description' => $request->description . " (". $request->ticket_balance .")",
+            'title' => $request->ticket_balance . " Tickets",
+            'type' => "Ticket",
             'date' => time()
         ]);
         $ticket_transaction->save();
@@ -73,7 +76,7 @@ class TicketController extends Controller
         );
     }
 
-    public function enterRaffle($player_id, $desc) {
+    public function enterRaffle($player_id) {
         $ticket = Ticket::where('player_id', $player_id)->first();
         if($ticket->ticket_balance != 0){
             $ticket->update(
@@ -85,8 +88,9 @@ class TicketController extends Controller
 
             $ticket_transaction = new TicketTransaction([
                 'ticket_id' => $ticket->ticket_id,
-                'description' => $desc,
-                'date' => time()
+                'title' => 'Raffle Entry',
+                'type'  => 'Ticket',
+                'date'  => time()
             ]);
             $ticket_transaction->save();
 

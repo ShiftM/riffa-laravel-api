@@ -42,4 +42,66 @@ class PrizeController extends Controller
         return $prizeList;
 
     }
+
+    public function newPrize(Request $request) {
+        $prize = new Prizes([
+            'name'            =>       $request->name,
+            'description'     =>       isset($request->description),
+            'coin_amount'     =>       isset($request->coin_amount),
+            'image'           =>       isset($request->image)
+        ]);
+        $prize->save();
+
+        $prize_category = new PrizeCategories([
+            'prize_id'        =>       $prize->prize_id,
+            'category_id'     =>       $request->category_id
+        ]);
+        $prize_category->save();
+
+
+        return Response::json(
+            [
+                'prize'             =>      $prize,
+                'prize_category'    =>      $prize_category
+            ],
+            200
+        );
+    }
+
+    public function editPrize(Request $request) {
+        $prize = Prizes::where('prize_id', $request->prize_id)->first();
+        $prize->update([
+            'name'            =>       $request->name,
+            'description'     =>       isset($request->description),
+            'coin_amount'     =>       isset($request->coin_amount),
+            'image'           =>       isset($request->image)
+        ]);
+
+        $prize_category = PrizeCategories::where('prize_id', $request->prize_id)->first();
+        $prize_category->update([
+            'prize_id'        =>       $prize->prize_id,
+            'category_id'     =>       $request->category_id
+        ]);
+
+        return Response::json(
+            [
+                'prize'             =>      $prize,
+                'prize_category'    =>      $prize_category
+            ],
+            200
+        );
+    }
+
+    public function removePrize(Request $request) {
+
+        if($prizes = Prizes::where([
+            ['prize_id', $request->prize_id],
+            ['is_available', 1]
+        ])->update(['is_available' => 0])) {
+            return response('Successful', 200);
+        } else {
+            return response('Failed/Already Updated', 200);
+        }
+
+    }
 }
