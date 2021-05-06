@@ -4,7 +4,7 @@
 
 ##### `api/v1/register/player`
 
-* For player registration. Require following parameters:
+* For player registration. Will automatically create **ticket and coin balance = 0**. Require following parameters:
 >firstname \
 >lastname \
 >email \
@@ -25,7 +25,7 @@
 
 ##### `api/v1/login`
 
-* Will login player. Require following parameters:
+* Will login player. Will show **player info, coin and ticket balance**. Require following parameters:
 >email \
 >password
 
@@ -33,14 +33,27 @@
 
 ##### `api/v1/balance/ticket/{player_id}`
 
-* Will show coin balance of player `{player_id}`
+* Will show ticket balance of player `{player_id}`
 
 ##### `api/v1/add/ticket/`
 
-* Will add or update coin balance of player. Require following parameters:
+* Will increase coin balance of player. Require following parameters:
 >player_id \
 >description \
->ticket_balance 
+>ticket_balance ***(tickets to be added)*** 
+
+##### `api/v1/subtract/ticket/`
+
+* Will decrease coin balance of player. Require following parameters:
+>player_id \
+>description \
+>ticket_balance ***(tickets to be subtracted)*** 
+
+### COIN CONTROLLER
+
+##### `api/v1/balance/coins/{player_id}`
+
+* Will show coin balance of player `{player_id}`
 
 
 ### RAFFLE CONTROLLER
@@ -61,6 +74,7 @@
 ##### `api/v1/edit/raffle`
 
 * Will update selected raffle entry. Require following parameters:
+>raffle_id \
 >prize_id \
 >charity_id ***(nullable)***\
 >raffle_name \
@@ -81,7 +95,7 @@
 
 ##### `api/v1/take/raffle/`
 
-* Will save selected slot. Require following parameters:
+* Will save selected slot. Will automatically decrease **1 ticket balance**. Require following parameters:
 >raffle_id \
 >player_id \
 >slot_number 
@@ -93,7 +107,7 @@
 
 ##### `api/v1/end/raffles/`
 
-* Will update status of taken slots to 0. Require following parameters:
+* Will update status of taken slots to 0, will automatically give **100 coins** to players who participated. Require following parameters:
 >raffle_id 
 * Results: `'Successful' 'Failed/Already Updated'`
 

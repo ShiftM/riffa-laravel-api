@@ -27,6 +27,7 @@ class CreateRafflesTable extends Migration
             $table->integer('raffle_type_id')->unsigned()->nullable();
             $table->foreign('raffle_type_id')->references('raffle_type_id')->on('raffle_types');
             $table->string('raffle_type')->nullable();
+            $table->integer('slot_price')->nullable()->default(1);
             $table->boolean('is_active')->nullable()->default(1);
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();

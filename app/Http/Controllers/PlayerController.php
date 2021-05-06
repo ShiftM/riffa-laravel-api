@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ImageController;
+use App\Models\Coins;
 use App\Models\Player;
 use App\Models\Ticket;
 use Response;
@@ -15,6 +16,8 @@ class PlayerController extends Controller
 {
     public function __construct() {
         $this->image = new ImageController();
+        $this->ticket = new Ticket();
+        $this->coins = new Coins();
     }
 
     public function login(Request $request) {
@@ -33,9 +36,14 @@ class PlayerController extends Controller
             $token  = null;
         }
 
+        $ticket = $this->ticket->showTicketBalance($player->player_id);
+        $coins = $this->coins->showCoinBalance($player->player_id);
+
         return Response::json(
             [
                 'player' => $player,
+                'ticket' => $ticket,
+                'coins' => $coins,
                 'token'  => $token,
             ],
             200
@@ -52,6 +60,8 @@ class PlayerController extends Controller
             'created_at'    => time()
         ]);
         $player->save();
+
+        $this->newPlayer($player->player_id);
 
         return Response::json(
             [
@@ -85,6 +95,24 @@ class PlayerController extends Controller
             ],
             200
         );
+    }
+
+    public function newPlayer($player_id) {
+
+        $ticket = new Ticket([
+            'player_id'         => $player_id,
+            'ticket_balance'    => 0,
+            'last_update'       => time()
+        ]);
+        $ticket->save();
+
+        $coins = new Coins([
+            'player_id'         => $player_id,
+            'coin_balance'    => 0,
+            'last_update'       => time()
+        ]);
+        $coins->save();
+
     }
 
 }
