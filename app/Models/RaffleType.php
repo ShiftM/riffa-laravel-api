@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 
-class Coins extends Model
+class RaffleType extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    protected $primaryKey   = 'coin_id';
+    protected $primaryKey   = 'raffle_type_id';
     public $timestamps      = false;
     protected $guarded      = [];
+
+    public function raffle() {
+        return $this->belongsTo('App\Models', 'raffle_type_id');
+    }
 }
