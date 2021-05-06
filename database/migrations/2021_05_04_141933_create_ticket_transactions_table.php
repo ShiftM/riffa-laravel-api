@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoinsTransactionsTable extends Migration
+class CreateTicketTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateCoinsTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coins_transactions', function (Blueprint $table) {
+        Schema::create('ticket_transactions', function (Blueprint $table) {
             $table->increments('transaction_id');
-            $table->integer('coins_id')->unsigned();
-            $table->foreign('coins_id')->references('coins_id')->on('coins');
-            $table->string('transaction_type');
-            $table->date('date');
+            $table->integer('ticket_id')->unsigned();
+            $table->foreign('ticket_id')->references('ticket_id')->on('tickets');
+            $table->string('description');
+            $table->integer('date');
         });
     }
 
@@ -29,6 +29,6 @@ class CreateCoinsTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coins_transactions');
+        Schema::dropIfExists('ticket_transactions');
     }
 }

@@ -17,19 +17,24 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function() {
 
     //<--------PLAYER CONTROLLER-------->
-    Route::post('/register/player',         'PlayerController@registerPlayer');
-    Route::post('/login',                   'PlayerController@login');
-    Route::post('/update/info',             'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
+    Route::post('/register/player',             'PlayerController@registerPlayer');
+    Route::post('/login',                       'PlayerController@login');
+    Route::post('/update/info',                 'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
 
-    //<--------COINS - PLAYER CONTROLLER-------->
-    Route::get('/coins/{id}',               'PlayerController@showCoinBalance');
+    //<--------TICKET CONTROLLER-------->
+    Route::get('/balance/ticket/{player_id}',   'TIcketController@showTicketBalance');
+    Route::post('/add/ticket/',                 'TIcketController@addTicket');
 
     //<--------RAFFLES CONTROLLER-------->
-    Route::get('/all/raffles',              'RafflesController@showAllRaffles');
-    Route::get('raffles/schedule/{id}',     'RafflesController@showRaffleInfo');
-    Route::get('raffles/slots/{id}',        'RafflesController@showTakenSlots');
-    Route::post('raffles/take_slot/',       'RafflesController@saveSelectedSlot');
-    Route::post('end/raffles/',             'RafflesController@endRaffle');
-    Route::post('/add/raffle-info',         'RafflesController@insertRaffleInfo');
+    Route::get('/all/raffles',                  'RafflesController@showAllRaffles');
+    Route::get('/raffles/info/{raffle_id}',     'RafflesController@showRaffleInfo');
+    Route::get('/raffles/taken/{raffle_id}',    'RafflesController@showTakenSlots');
+    Route::post('/take/raffle/',                'RafflesController@saveSelectedSlot');
+    Route::post('/end/raffle/',                 'RafflesController@endRaffle');
+    Route::post('/add/raffle',                  'RafflesController@insertRaffleInfo');
+    Route::post('/edit/raffle',                 'RafflesController@editRaffleInfo');
+
+    //<--------PRIZES CONTROLLER-------->
+    Route::get('/all/prizes',                   'PrizeController@showAllPrizes');
 
 });

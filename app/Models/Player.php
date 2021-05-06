@@ -12,9 +12,6 @@ class Player extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    const CREATED_AT        = 'created_at';
-    const UPDATED_AT        = 'updated_at';
-
     protected $guard        = 'players';
     protected $primaryKey   = 'player_id';
     public $timestamps      = false;

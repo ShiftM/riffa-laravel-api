@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRafflesSchedulesTable extends Migration
+class CreateRaffleSlotsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateRafflesSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('raffles_schedules', function (Blueprint $table) {
-            $table->increments('schedule_id');
+        Schema::create('raffle_slots', function (Blueprint $table) {
+            $table->increments('slots_id');
             $table->integer('raffle_id')->unsigned();
+            $table->integer('player_id')->unsigned();
             $table->foreign('raffle_id')->references('raffle_id')->on('raffles');
-            $table->integer('start_schedule');
-            $table->integer('end_schedule');
-            $table->integer('created_at');
-            $table->integer('updated_at')->nullable();
+            $table->foreign('player_id')->references('player_id')->on('players');
+            $table->integer('slot_number');
+            $table->boolean('is_winner')->nullable()->default(0);
         });
     }
 
@@ -31,6 +31,6 @@ class CreateRafflesSchedulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('raffles_schedules');
+        Schema::dropIfExists('raffle_slots');
     }
 }

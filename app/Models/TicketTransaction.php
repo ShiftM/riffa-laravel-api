@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Coins extends Model
+class TicketTransaction extends Model
 {
-    use HasFactory,Notifiable;
+    use HasFactory, Notifiable;
 
-    protected $primaryKey   = 'coins_id';
-    protected $dateFormat = 'Y-m-d';
+    protected $primaryKey   = 'transaction_id';
+    public $timestamps      = false;
     protected $guarded      = [];
-
 }
