@@ -16,17 +16,22 @@ class RafflesController extends Controller
 {
     public function showAllRaffles() {
         $raffles = Raffles::with('schedule')->get();
-        $prize = Prizes::where([
-            ['prize_id', $raffles[0]->prize_id]
-        ])->get('name');
-        $charity = Charity::where([
-            ['charity_id', $raffles[0]->charity_id]
-        ])->get('charity_name');
+        // $prize = Prizes::where([
+        //     ['prize_id', $raffles[0]->prize_id]
+        // ])->get('name');
+        // $charity = Charity::where([
+        //     ['charity_id', $raffles[0]->charity_id]
+        // ])->get('charity_name');
 
-        $raffles[0]['prize_name'] = $prize[0]['name'];
-        $raffles[0]['charity_name'] = $charity[0]['charity_name'];
+        // $raffles[0]['prize_name'] = $prize[0]['name'];
+        // $raffles[0]['charity_name'] = $charity[0]['charity_name'];
 
-        return $raffles;
+        return Response::json(
+            [
+                'raffles' => $raffles
+            ],
+            200
+        );
     }
 
     public function showRaffleInfo($id)
@@ -47,29 +52,32 @@ class RafflesController extends Controller
         $info = $request->all();
         $raffle_info = new Raffles([
             'prize_id'      =>       $info['prize_id'],
-            'charity_id'    =>       isset($info['charity_id']) ? $info['charity_id'] : null,
+            // 'charity_id'    =>       isset($info['charity_id']) ? $info['charity_id'] : null,
+            'charity'       =>       $info['charity_id'],
             'raffle_name'   =>       $info['raffle_name'],
             'image'         =>       isset($info['image']) ? (strpos($info['image'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.RAFFLE'), '', $info['image']) == $raffle_info['image'] ? str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['image']) : $this->image->uploadImage($info['image'])) : "" ) : "",
             'raffle_desc'   =>       isset($info['raffle_desc']) ? $info['raffle_desc'] : null,
             'slots'         =>       $info['slots'],
             'slot_price'    =>       $info['slot_price'],
+            // 'raffle_type_id'=>       $info['raffle_type'],
+            'raffle_type'   =>       $info['raffle_type'],
             'created_at'    =>       time()
         ]);
         $raffle_info->save();
 
-        if($raffle_info != null) {
-            $raffle_schedule = new RafflesSchedule([
-                'raffle_id' => $raffle_info->raffle_id,
-                'start_schedule' => $info['start_schedule'],
-                'end_schedule' => $info['end_schedule']
-            ]);
-            $raffle_schedule->save();
-        }
+        // if($raffle_info != null) {
+        //     $raffle_schedule = new RafflesSchedule([
+        //         'raffle_id' => $raffle_info->raffle_id,
+        //         'start_schedule' => $info['start_schedule'],
+        //         'end_schedule' => $info['end_schedule']
+        //     ]);
+        //     $raffle_schedule->save();
+        // }
 
         return Response::json(
             [
                 'raffle_info' => $raffle_info,
-                'raffle_schedule' => $raffle_schedule
+                // 'raffle_schedule' => $raffle_schedule
             ],
             200
         );

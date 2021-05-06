@@ -21,13 +21,18 @@ class PlayerController extends Controller
         $token = '';
         $player = Player::where([
             ['email', $request->email],
-            ['password', $request->password]
         ])->first();
 
-        if($player != null) {
-            $player['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$player['profile'];
-            $token = $player->createToken('player')->plainTextToken;
+        if(Hash::check($request->password, $player->password)) {
+            if($player != null) {
+                $player['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$player['profile'];
+                $token = $player->createToken('player')->plainTextToken;
+            }
+        } else {
+            $player = null;
+            $token  = null;
         }
+
         return Response::json(
             [
                 'player' => $player,
@@ -42,8 +47,8 @@ class PlayerController extends Controller
             'first_name'    => $request->firstname,
             'last_name'     => $request->lastname,
             'email'         => $request->email,
-            'password'      => $request->password,
-            'role'          => 'user',
+            'password'      => Hash::make($request->password),
+            'role'          => Config::get('constants.ROLE.USER'),
             'created_at'    => time()
         ]);
         $player->save();
