@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Coins extends Model
+class Category extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $primaryKey   = 'coin_id';
+    protected $primaryKey   = 'category_id';
     public $timestamps      = false;
     protected $guarded      = [];
+
 }

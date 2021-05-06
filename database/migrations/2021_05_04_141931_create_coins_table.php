@@ -14,12 +14,11 @@ class CreateCoinsTable extends Migration
     public function up()
     {
         Schema::create('coins', function (Blueprint $table) {
-            $table->increments('coins_id');
+            $table->increments('coin_id');
             $table->integer('player_id')->unsigned();
             $table->foreign('player_id')->references('player_id')->on('players');
-            $table->integer('coins')->nullable();
-            $table->date('last_update');
-            $table->timestamps();
+            $table->integer('coin_balance');
+            $table->integer('last_update');
         });
     }
 

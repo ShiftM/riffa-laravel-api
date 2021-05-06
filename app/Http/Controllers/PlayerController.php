@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ImageController;
 use App\Models\Coins;
 use App\Models\Player;
+use App\Models\Ticket;
 use Response;
 use Auth;
 use Config;
@@ -15,22 +16,34 @@ class PlayerController extends Controller
 {
     public function __construct() {
         $this->image = new ImageController();
+        $this->ticket = new Ticket();
+        $this->coins = new Coins();
     }
 
     public function login(Request $request) {
         $token = '';
         $player = Player::where([
             ['email', $request->email],
-            ['password', $request->password]
         ])->first();
 
-        if($player != null) {
-            $player['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$player['profile'];
-            $token = $player->createToken('player')->plainTextToken;
+        if(Hash::check($request->password, $player->password)) {
+            if($player != null) {
+                $player['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$player['profile'];
+                $token = $player->createToken('player')->plainTextToken;
+            }
+        } else {
+            $player = null;
+            $token  = null;
         }
+
+        $ticket = $this->ticket->showTicketBalance($player->player_id);
+        $coins = $this->coins->showCoinBalance($player->player_id);
+
         return Response::json(
             [
                 'player' => $player,
+                'ticket' => $ticket,
+                'coins' => $coins,
                 'token'  => $token,
             ],
             200
@@ -42,10 +55,13 @@ class PlayerController extends Controller
             'first_name'    => $request->firstname,
             'last_name'     => $request->lastname,
             'email'         => $request->email,
-            'password'      => $request->password,
+            'password'      => Hash::make($request->password),
+            'role'          => Config::get('constants.ROLE.USER'),
             'created_at'    => time()
         ]);
         $player->save();
+
+        $this->newPlayer($player->player_id);
 
         return Response::json(
             [
@@ -59,16 +75,16 @@ class PlayerController extends Controller
         $info = $request->all();
         $player = Player::find($info['playerId']);
         $player->update([
-            'first_name' => $info['firstname'],
-            'last_name' => $info['lastname'],
-            'middle_initial' => $info['middleinitial'],
-            'email' => $info['email'],
-            'profile' => $info['profile'] != null ? (strpos($info['profile'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['profile']) == $player['profile'] ? str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['profile']) : $this->image->uploadImage($info['profile'])) : "" ) : "",
-            'address_type' => $info['address_type'],
-            'phone_number' => $info['phone'],
-            'address' => $info['address'],
-            'birthdate' => $info['birthdate'],
-            'updated_at' => time()
+            'first_name'        => $info['firstname'],
+            'last_name'         => $info['lastname'],
+            'middle_initial'    => $info['middleinitial'],
+            'email'             => $info['email'],
+            'profile'           => $info['profile'] != null ? (strpos($info['profile'], 'aws') ? (str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['profile']) == $player['profile'] ? str_replace(Config::get('constants.RIFFA_S3_URL.PROFILE'), '', $info['profile']) : $this->image->uploadImage($info['profile'])) : "" ) : "",
+            'address_type'      => $info['address_type'],
+            'phone_number'      => $info['phone'],
+            'address'           => $info['address'],
+            'birthdate'         => $info['birthdate'],
+            'updated_at'        => time()
         ]);
         if($info['profile'] != null) {
             $player['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$player['profile'];
@@ -81,17 +97,21 @@ class PlayerController extends Controller
         );
     }
 
-    public function showCoinBalance($id) {
-        $coins = Coins::where([
-            ['player_id', $id],
-        ])->first();
+    public function newPlayer($player_id) {
 
-        return Response::json(
-            [
-                'coins' => $coins
-            ],
-            200
-        );
+        $ticket = new Ticket([
+            'player_id'         => $player_id,
+            'ticket_balance'    => 0,
+            'last_update'       => time()
+        ]);
+        $ticket->save();
+
+        $coins = new Coins([
+            'player_id'         => $player_id,
+            'coin_balance'    => 0,
+            'last_update'       => time()
+        ]);
+        $coins->save();
 
     }
 
