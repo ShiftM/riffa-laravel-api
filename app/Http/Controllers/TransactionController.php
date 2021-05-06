@@ -29,7 +29,12 @@ class TransactionController extends Controller
 
         }
 
-        return $transactions;
+        return Response::json(
+            [
+                'transactions' => $transactions
+            ],
+            200
+        );
 
     }
 }

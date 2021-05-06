@@ -19,7 +19,7 @@ class CreateRafflesTable extends Migration
             $table->foreign('type_id')->references('type_id')->on('raffle_types');
             $table->integer('charity_id')->unsigned()->nullable();
             $table->foreign('charity_id')->references('charity_id')->on('charities');
-            $table->integer('prize_id')->unsigned();
+            $table->integer('prize_id')->unsigned()->nullable();
             $table->foreign('prize_id')->references('prize_id')->on('prizes');
             $table->integer('prize_2')->unsigned()->nullable();
             $table->integer('prize_3')->unsigned()->nullable();

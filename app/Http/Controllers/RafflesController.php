@@ -46,7 +46,12 @@ class RafflesController extends Controller
         }
 
 
-        return $raffles;
+        return Response::json(
+            [
+                'raffles' => $raffles
+            ],
+            200
+        );
     }
 
     public function showRaffleInfo($id)

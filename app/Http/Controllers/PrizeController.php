@@ -39,7 +39,12 @@ class PrizeController extends Controller
 
         }
 
-        return $prizeList;
+        return Response::json(
+            [
+                'prizeList'             =>      $prizeList
+            ],
+            200
+        );
 
     }
 
