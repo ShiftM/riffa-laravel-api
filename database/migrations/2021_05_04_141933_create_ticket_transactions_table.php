@@ -15,9 +15,12 @@ class CreateTicketTransactionsTable extends Migration
     {
         Schema::create('ticket_transactions', function (Blueprint $table) {
             $table->increments('transaction_id');
-            $table->integer('ticket_id')->unsigned();
+            $table->integer('ticket_id')->unsigned()->nullable();
             $table->foreign('ticket_id')->references('ticket_id')->on('tickets');
-            $table->string('description');
+            $table->integer('coin_id')->unsigned()->nullable();
+            $table->foreign('coin_id')->references('coin_id')->on('coins');
+            $table->string('title');
+            $table->string('type');
             $table->integer('date');
         });
     }
