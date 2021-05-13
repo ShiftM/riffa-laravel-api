@@ -17,4 +17,11 @@ class Player extends Authenticatable
     public $timestamps      = false;
     protected $guarded      = [];
 
+    public function coin() {
+        return $this->hasOne(Coins::class, 'player_id');
+    }
+
+    public function ticket() {
+        return $this->hasOne(Ticket::class, 'player_id');
+    }
 }

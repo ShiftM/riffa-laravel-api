@@ -20,11 +20,23 @@ class PlayerController extends Controller
         $this->coins = new Coins();
     }
 
+    public function allUsers() {
+        
+        $users = Player::with('ticket')->get();
+
+        return Response::json(
+            [
+                'users' => $users
+            ],
+            200
+        );
+    }
+
     public function login(Request $request) {
         $token = '';
         $player = Player::where([
             ['email', $request->email],
-        ])->first();
+        ])->with('coin','ticket')->first();
 
         if(Hash::check($request->password, $player->password)) {
             if($player != null) {
@@ -36,14 +48,9 @@ class PlayerController extends Controller
             $token  = null;
         }
 
-        $ticket = $this->ticket->showTicketBalance($player->player_id);
-        $coins = $this->coins->showCoinBalance($player->player_id);
-
         return Response::json(
             [
                 'player' => $player,
-                'ticket' => $ticket,
-                'coins' => $coins,
                 'token'  => $token,
             ],
             200
