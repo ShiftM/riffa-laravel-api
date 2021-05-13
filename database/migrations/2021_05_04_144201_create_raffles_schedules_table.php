@@ -17,8 +17,7 @@ class CreateRafflesSchedulesTable extends Migration
             $table->increments('schedule_id');
             $table->integer('raffle_id')->unsigned();
             $table->foreign('raffle_id')->references('raffle_id')->on('raffles');
-            $table->integer('start_schedule');
-            $table->integer('end_schedule');
+            $table->integer('schedule')->length(10)->nullable();
         });
     }
 

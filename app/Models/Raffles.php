@@ -18,4 +18,11 @@ class Raffles extends Model
         return $this->belongsTo('App\Models\RafflesSchedule', 'raffle_id');
     }
 
+    public function charity() {
+        return $this->belongsTo('App\Models\Charity', 'charity_id');
+    }
+
+    public function type() {
+        return $this->belongsTo('App\Models\RaffleType', 'type_id');
+    }
 }

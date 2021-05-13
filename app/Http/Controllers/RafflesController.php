@@ -15,6 +15,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Response;
+use Config;
 
 class RafflesController extends Controller
 {
@@ -24,26 +25,28 @@ class RafflesController extends Controller
     }
 
     public function showAllRaffles() {
-        $raffles = Raffles::with('schedule')->get();
+        $raffles = Raffles::with('schedule', 'charity', 'type')
+                 ->where('status', Config::get('constants.STATUS.ACTIVE'))
+                 ->get();
 
-        foreach($raffles as $raffle) {
-            $prize = Prizes::where([
-                ['prize_id', $raffle->prize_id]
-            ])->first('name');
-            $charity = Charity::where([
-                ['charity_id', $raffle->charity_id]
-            ])->first('charity_name');
-            $raffle_type = RaffleType::where([
-                ['type_id', $raffle->type_id]
-            ])->first('raffle_type');
+        // foreach($raffles as $raffle) {
+        //     $prize = Prizes::where([
+        //         ['prize_id', $raffle->prize_id]
+        //     ])->first('name');
+        //     $charity = Charity::where([
+        //         ['charity_id', $raffle->charity_id]
+        //     ])->first('charity_name');
+        //     $raffle_type = RaffleType::where([
+        //         ['type_id', $raffle->type_id]
+        //     ])->first('raffle_type');
 
-            $raffle['prize_name'] = $prize['name'];
-            $raffle['raffle_type'] = $raffle_type['raffle_type'];
+        //     $raffle['prize_name'] = $prize['name'];
+        //     $raffle['raffle_type'] = $raffle_type['raffle_type'];
 
-            if(isset($charity['charity_name'])) {
-                $raffle['charity_name'] = $charity['charity_name'];
-            }
-        }
+        //     if(isset($charity['charity_name'])) {
+        //         $raffle['charity_name'] = $charity['charity_name'];
+        //     }
+        // }
 
 
         return Response::json(
@@ -92,8 +95,7 @@ class RafflesController extends Controller
         if($raffle_info != null) {
             $raffle_schedule = new RafflesSchedule([
                 'raffle_id' => $raffle_info->raffle_id,
-                'start_schedule' => $info['start_schedule'],
-                'end_schedule' => $info['end_schedule']
+                'schedule' => $info['schedule'],
             ]);
             $raffle_schedule->save();
         }
@@ -101,7 +103,6 @@ class RafflesController extends Controller
         return Response::json(
             [
                 'raffle_info' => $raffle_info,
-                'raffle_schedule' => $raffle_schedule
             ],
             200
         );
@@ -142,8 +143,7 @@ class RafflesController extends Controller
 
         $raffle_schedule->update([
             'raffle_id' => $info['raffle_id'],
-            'start_schedule' => $info['start_schedule'],
-            'end_schedule' => $info['end_schedule']
+            'schedule' => $info['schedule'],
         ]);
 
         return Response::json(
