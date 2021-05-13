@@ -15,7 +15,7 @@ class CreateRafflesTable extends Migration
     {
         Schema::create('raffles', function (Blueprint $table) {
             $table->increments('raffle_id');
-            $table->integer('type_id')->unsigned();
+            $table->integer('type_id')->unsigned()->nullable();
             $table->foreign('type_id')->references('type_id')->on('raffle_types');
             $table->integer('charity_id')->unsigned()->nullable();
             $table->foreign('charity_id')->references('charity_id')->on('charities');
@@ -32,7 +32,7 @@ class CreateRafflesTable extends Migration
             $table->string('image2')->nullable();
             $table->string('image3')->nullable();
             $table->integer('slots');
-            $table->boolean('is_active')->nullable()->default(1);
+            $table->boolean('status')->nullable()->default(1);
             $table->integer('created_at');
             $table->integer('updated_at')->nullable();
         });

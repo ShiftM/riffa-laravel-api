@@ -15,7 +15,9 @@ class CreateRaffleTypesTable extends Migration
     {
         Schema::create('raffle_types', function (Blueprint $table) {
             $table->increments('type_id');
-            $table->string('raffle_type');
+            $table->string('type_name');
+            $table->integer('created_at')->lenght(10)->nullable();
+            $table->integer('updated_at')->length(10)->nullable();
         });
     }
 

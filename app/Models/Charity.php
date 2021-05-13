@@ -10,6 +10,7 @@ class Charity extends Model
 {
     use HasFactory, Notifiable;
 
+    protected $table        = 'charities';
     protected $primaryKey   = 'charity_id';
     public $timestamps      = false;
     protected $guarded      = [];
