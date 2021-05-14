@@ -51,7 +51,7 @@ class TicketController extends Controller
     }
 
     public function subtractTicket(Request $request) {
-        $ticket = Ticket::where('player_id', $request->player_id)->get();
+        $ticket = Ticket::where('player_id', $request->player_id)->first();
         $ticket->update(
             [
                 'ticket_balance' => $ticket->ticket_balance - $request->ticket_balance,
