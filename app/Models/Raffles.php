@@ -25,4 +25,8 @@ class Raffles extends Model
     public function type() {
         return $this->belongsTo('App\Models\RaffleType', 'type_id');
     }
+
+    // public function slots() {
+    //     return $this->hasMany('App\Models\RaffleSlots', 'raffle_id');
+    // }
 }

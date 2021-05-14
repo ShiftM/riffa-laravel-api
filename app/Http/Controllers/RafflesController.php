@@ -1,27 +1,67 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Charity;
 use App\Models\Coins;
+use App\Models\Charity;
 use App\Models\Player;
 use App\Models\Prizes;
 use App\Models\Raffles;
+use App\Models\RaffleType;
 use App\Models\RaffleSlots;
 use App\Models\RafflesSchedule;
-use App\Models\RaffleType;
 use App\Models\TicketTransaction;
+
+use Config;
+use Response;
 use DateTime;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Response;
-use Config;
+
+use App\Socket;
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
 
 class RafflesController extends Controller
 {
-
     public function __construct() {
         $this->enterRaffle = new TicketController();
+    }
+
+    public function testSocket()
+    {
+        $server = IoServer::factory(
+            new HttpServer(
+                new WsServer(
+                    new Socket()
+                )
+            ), 8080
+        );
+
+        $server->run();
+    }
+
+    public function shuffle()
+    {
+        $dateToday = date('Y-m-d');
+
+        // get the raffle schedule today 
+        $raffleSched = RafflesSchedule::whereRaw("FROM_UNIXTIME(start_schedule, '%Y-%m-%d') = '$dateToday'")->first();
+
+        // shuffle the raffle slot based on schedule that taken
+        $raffleSlots = RaffleSlots::where('raffle_id',$raffleSched->raffle_id)->get()->random(1);
+
+        // then assign it in cron job schedule
+        // shuffle the raffle slot based on schedule that taken
+        // return the chosen raffle slot in front end
+        // perform a web socket for real update
+        return Response::json([
+            'success' => true,
+            'raffle_schedule' => $raffleSched,
+            'winner_slot' => $raffleSlots,
+            'dateToday' => convertToUnix(date('Y-m-d H:i:s'))
+        ],200);
     }
 
     public function showAllRaffles() {
