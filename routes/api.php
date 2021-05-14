@@ -25,7 +25,7 @@ Route::group(['prefix' => 'v1'], function() {
     //<--------TICKET CONTROLLER-------->
     Route::get('/balance/ticket/{player_id}',   'TIcketController@showTicketBalance');
     Route::post('/add/ticket/',                 'TIcketController@addTicket')->middleware('auth:sanctum');
-    Route::post('/subtract/ticket/',            'TIcketController@subtractTicket');
+    Route::post('/subtract/ticket/',            'TIcketController@subtractTicket')->middleware('auth:sanctum');
 
     //<--------COIN CONTROLLER-------->
     Route::get('/balance/coins/{player_id}',    'CoinController@showCoinBalance');
@@ -57,5 +57,8 @@ Route::group(['prefix' => 'v1'], function() {
 
     //<--------RAFFLE TYPE CONTROLLER-------->
     Route::get('/all/types',                    'RaffleTypeController@getAllTypes');
+
+    //<--------RAFFLE SLOT CONTROLLER-------->
+    Route::post('/get/slot',                    'RaffleSlotsController@savePlayerSlot')->middleware('auth:sanctum');
 
 });

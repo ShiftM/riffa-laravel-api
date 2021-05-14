@@ -24,4 +24,8 @@ class Player extends Authenticatable
     public function ticket() {
         return $this->hasOne(Ticket::class, 'player_id');
     }
+
+    public function slots() {
+        return $this->hasMany(RaffleSlots::class, 'player_id');
+    }
 }
