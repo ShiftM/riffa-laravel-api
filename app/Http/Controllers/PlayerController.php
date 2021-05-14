@@ -40,7 +40,7 @@ class PlayerController extends Controller
         $token = '';
         $player = Player::where([
             ['email', $request->email],
-        ])->with('coin','ticket')->first();
+        ])->with('coin','ticket', 'slots')->first();
 
         if(Hash::check($request->password, $player->password)) {
             if($player != null) {
