@@ -20,6 +20,8 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/register/player',             'PlayerController@registerPlayer');
     Route::post('/login',                       'PlayerController@login');
     Route::post('/update/info',                 'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
+    Route::get('/all/players',                  'PlayerController@showAllPlayers');
+    Route::get('/player/{player_id}',           'PlayerController@showPlayerInfo');
 
     //<--------TICKET CONTROLLER-------->
     Route::get('/balance/ticket/{player_id}',   'TIcketController@showTicketBalance');

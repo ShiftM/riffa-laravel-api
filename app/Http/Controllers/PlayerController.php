@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ImageController;
 use App\Models\Coins;
 use App\Models\Player;
+use App\Models\Raffles;
+use App\Models\RaffleSlots;
 use App\Models\Ticket;
+use App\Models\TicketTransaction;
 use Response;
 use Auth;
 use Config;
+use Illuminate\Support\Facades\DB;
 
 class PlayerController extends Controller
 {
@@ -112,6 +116,59 @@ class PlayerController extends Controller
             'last_update'       => time()
         ]);
         $coins->save();
+
+    }
+
+    public function showAllPlayers() {
+        $players = Player::all();
+        $total_ticket_spent = 0;
+
+        foreach($players as $player) {
+
+            $raffle_entry = RaffleSlots::where('player_id', $player->player_id)
+            ->first(DB::raw("COUNT(player_id) as player_id"));
+            $player['raffle_entry'] = $raffle_entry->player_id;
+
+            // $ticket_id = Ticket::where('player_id', $player->player_id)->first();
+            // $ticket_spent = TicketTransaction::where('ticket_id', $ticket_id->ticket_id)->get();
+            // foreach($ticket_spent as $ticket){
+
+            //     $player['raffle_entry'] = $raffle_entry->player_id;
+
+            // }
+
+        }
+
+        return Response::json(
+            [
+                'players' => $players
+            ],
+            200
+        );
+    }
+
+    public function showPlayerInfo($player_id) {
+        $raffle_list = array();
+
+        $player = Player::where('player_id', $player_id)->first();
+
+        $ticket = Ticket::where('player_id', $player_id)->first();
+        $player['ticket_balance'] = $ticket->ticket_balance;
+
+        $raffles_participated = RaffleSlots::where('player_id', $player_id)
+        ->get(DB::raw("DISTINCT(raffle_id)"));
+        foreach($raffles_participated as $entry) {
+            $raffle = Raffles::where('raffle_id', $entry->raffle_id)->first();
+            array_push($raffle_list, $raffle);
+        }
+        $player['recent_raffles'] = $raffle_list;
+
+        return Response::json(
+            [
+                'player' => $player
+            ],
+            200
+        );
 
     }
 

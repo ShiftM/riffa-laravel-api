@@ -7,6 +7,7 @@ use App\Models\Player;
 use App\Models\Ticket;
 use App\Models\TicketTransaction;
 use Illuminate\Http\Request;
+use Response;
 
 class TransactionController extends Controller
 {
