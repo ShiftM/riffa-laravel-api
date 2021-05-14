@@ -22,10 +22,11 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/update/info',                 'PlayerController@updatePlayerInfo')->middleware('auth:sanctum');
     Route::get('/all/players',                  'PlayerController@showAllPlayers');
     Route::get('/player/{player_id}',           'PlayerController@showPlayerInfo');
+    Route::get('/all/users',                    'PlayerController@allUsers');
 
     //<--------TICKET CONTROLLER-------->
     Route::get('/balance/ticket/{player_id}',   'TIcketController@showTicketBalance');
-    Route::post('/add/ticket/',                 'TIcketController@addTicket');
+    Route::post('/add/ticket/',                 'TIcketController@addTicket')->middleware('auth:sanctum');
     Route::post('/subtract/ticket/',            'TIcketController@subtractTicket');
 
     //<--------COIN CONTROLLER-------->
@@ -39,16 +40,24 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/take/raffle/',                'RafflesController@saveSelectedSlot');
     Route::post('/start/raffle/',               'RafflesController@startRaffle');
     Route::post('/end/raffle/',                 'RafflesController@endRaffle');
-    Route::post('/add/raffle',                  'RafflesController@insertRaffleInfo');
-    Route::post('/edit/raffle',                 'RafflesController@editRaffleInfo');
+    Route::post('/add/raffle',                  'RafflesController@insertRaffleInfo')->middleware('auth:sanctum');
+    Route::post('/edit/raffle',                 'RafflesController@editRaffleInfo')->middleware('auth:sanctum');
 
     //<--------PRIZES CONTROLLER-------->
     Route::get('/all/prizes',                   'PrizeController@showAllPrizes');
-    Route::post('/add/prize',                   'PrizeController@newPrize');
+    Route::post('/add/prize',                   'PrizeController@newPrize')->middleware('auth:sanctum');
     Route::post('/edit/prize',                  'PrizeController@editPrize');
     Route::post('/remove/prize',                'PrizeController@removePrize');
 
     //<--------TRANSACTION CONTROLLER-------->
     Route::get('/all/transactions',             'TransactionController@showAllTransactions');
+
+    //<--------CHARITY CONTROLLER-------->
+    Route::get('/all/charities',                'CharityController@getAllCharities');
+    Route::post('/add/charity',                 'CharityController@addCharity')->middleware('auth:sanctum');
+    Route::post('/update/charity',              'CharityController@updateCharityInfo')->middleware('auth:sanctum');
+
+    //<--------RAFFLE TYPE CONTROLLER-------->
+    Route::get('/all/types',                    'RaffleTypeController@getAllTypes');
 
 });

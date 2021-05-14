@@ -15,12 +15,15 @@ class CreateCharitiesTable extends Migration
     {
         Schema::create('charities', function (Blueprint $table) {
             $table->increments('charity_id');
+            $table->integer('charity_type_id');
             $table->string('charity_name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('contact_person');
-            $table->string('contact_number');
+            $table->string('contact_number')->nullable();
             $table->string('image')->nullable();
-            $table->boolean('is_active')->nullable()->default(1);
+            $table->boolean('status')->nullable()->default(1);
+            $table->integer('created_at')->length(10);
+            $table->integer('updated_at')->length(10)->nullable();
         });
     }
 
