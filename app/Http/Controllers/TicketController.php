@@ -61,7 +61,7 @@ class TicketController extends Controller
 
         $ticket_transaction = new TicketTransaction([
             'ticket_id' => $ticket->ticket_id,
-            'title' => $request->ticket_balance . " Tickets",
+            'title' => "- " . $request->ticket_balance . " Tickets",
             'type' => "Ticket",
             'date' => time()
         ]);

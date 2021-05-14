@@ -25,7 +25,7 @@ class PlayerController extends Controller
     }
 
     public function allUsers() {
-        
+
         $users = Player::with('ticket')->get();
 
         return Response::json(
@@ -163,7 +163,10 @@ class PlayerController extends Controller
         $player['ticket_balance'] = $ticket->ticket_balance;
 
         $raffles_participated = RaffleSlots::where('player_id', $player_id)
+        ->orderBy('raffle_id', 'desc')
+        ->limit(5)
         ->get(DB::raw("DISTINCT(raffle_id)"));
+
         foreach($raffles_participated as $entry) {
             $raffle = Raffles::where('raffle_id', $entry->raffle_id)->first();
             array_push($raffle_list, $raffle);
