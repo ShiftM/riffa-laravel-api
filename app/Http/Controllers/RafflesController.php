@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DrawRaffle;
+use App\Events\RaffleEvent;
 use App\Models\Charity;
 use App\Models\Coins;
 use App\Models\Player;
@@ -55,6 +57,16 @@ class RafflesController extends Controller
             ],
             200
         );
+    }
+
+    public function shuffle()
+    {
+        $dateToday = date('Y-m-d');
+        // get the raffle schedule today
+        $raffleSched = RafflesSchedule::whereRaw("FROM_UNIXTIME(start_schedule, '%Y-%m-%d') = '$dateToday'")->first();
+        //Fire the event
+        //Will draw winner then broadcast the result
+        DrawRaffle::dispatch($raffleSched);
     }
 
     public function showRaffleInfo($id)
@@ -171,33 +183,10 @@ class RafflesController extends Controller
 
     public function saveSelectedSlot(Request $request) {
 
-        $raffle_slots = RaffleSlots::where([
-            ['raffle_id', $request->raffle_id],
-            ['slot_number', $request->slot_number]
-        ])->first();
-
-        if($raffle_slots==null) {
-            $taken_slot = new RaffleSlots([
-                'raffle_id'     => $request->raffle_id,
-                'player_id'     => $request->player_id,
-                'slot_number'   => $request->slot_number
-            ]);
-
-            if($this->enterRaffle->enterRaffle($request->player_id) == 'Deducted'){
-
-                if($taken_slot->save()){
-                    return response('Successful', 200);
-                }
-                else {
-                    return response('Failed', 200);
-                }
-
-            } else {
-                return $this->enterRaffle->enterRaffle($request->player_id);
-            }
-        } else {
-            return response('Slot Taken', 200);
-        }
+        //Fire the event
+        //Will save selected slots then automatic deduct of 1 ticket
+        //Will save also to transaction logs
+        RaffleEvent::dispatch($request->all());
 
     }
 

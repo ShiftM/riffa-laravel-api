@@ -36,6 +36,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/all/raffles',                  'RafflesController@showAllRaffles');
     Route::get('/raffles/info/{raffle_id}',     'RafflesController@showRaffleInfo');
     Route::get('/raffles/taken/{raffle_id}',    'RafflesController@showTakenSlots');
+    Route::get('/draw/raffle',                  'RafflesController@shuffle');
 
     Route::post('/take/raffle/',                'RafflesController@saveSelectedSlot');
     Route::post('/start/raffle/',               'RafflesController@startRaffle');

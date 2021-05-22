@@ -18,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \App\Events\RaffleEvent::class => [
+            \App\Listeners\RaffleEventListener::class
+        ],
+        \App\Events\DrawRaffle::class => [
+            \App\Listeners\DrawRaffleListener::class
+        ],
     ];
 
     /**
