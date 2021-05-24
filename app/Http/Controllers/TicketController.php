@@ -95,9 +95,9 @@ class TicketController extends Controller
             $ticket_transaction->save();
 
 
-            return 'Deducted';
+            //return 'Deducted';
         } else {
-            return 'Insufficient Ticket';
+            //return 'Insufficient Ticket';
         }
     }
 }

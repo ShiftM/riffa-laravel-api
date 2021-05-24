@@ -63,7 +63,7 @@ class RafflesController extends Controller
     {
         $dateToday = date('Y-m-d');
         // get the raffle schedule today
-        $raffleSched = RafflesSchedule::whereRaw("FROM_UNIXTIME(start_schedule, '%Y-%m-%d') = '$dateToday'")->first();
+        $raffleSched = RafflesSchedule::whereRaw("FROM_UNIXTIME(schedule, '%Y-%m-%d') = '$dateToday'")->first();
         //Fire the event
         //Will draw winner then broadcast the result
         DrawRaffle::dispatch($raffleSched);

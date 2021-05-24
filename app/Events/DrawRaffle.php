@@ -36,7 +36,7 @@ class DrawRaffle implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('raffle.'.$this->winner->raffle_id);
+        return new Channel('raffle.'.$this->winner->raffle_id);
     }
 
     public function broadcastAs()

@@ -29,32 +29,32 @@ class RaffleEventListener
      */
     public function handle(RaffleEvent $event)
     {
-        $raffle_slots = RaffleSlots::where([
-            ['raffle_id', $event->request['raffle_id']],
-            ['slot_number', $event->request['slot_number']]
-        ])->first();
+        // $raffle_slots = RaffleSlots::where([
+        //     ['raffle_id', $event->request['raffle_id']],
+        //     ['slot_number', $event->request['slot_number']]
+        // ])->first();
 
-        if($raffle_slots==null) {
-            $taken_slot = new RaffleSlots([
-                'raffle_id'     => $event->request['raffle_id'],
-                'player_id'     => $event->request['player_id'],
-                'slot_number'   => $event->request['slot_number']
-            ]);
+        // if($raffle_slots==null) {
+        //     $taken_slot = new RaffleSlots([
+        //         'raffle_id'     => $event->request['raffle_id'],
+        //         'player_id'     => $event->request['player_id'],
+        //         'slot_number'   => $event->request['slot_number']
+        //     ]);
 
-            if($this->enterRaffle->enterRaffle($event->request['player_id']) == 'Deducted'){
+        //     if($this->enterRaffle->enterRaffle($event->request['player_id']) == 'Deducted'){
 
-                if($taken_slot->save()){
-                    return response('Successful', 200);
-                }
-                else {
-                    return response('Failed', 200);
-                }
+        //         if($taken_slot->save()){
+        //             return response('Successful', 200);
+        //         }
+        //         else {
+        //             return response('Failed', 200);
+        //         }
 
-            } else {
-                return $this->enterRaffle->enterRaffle($event->request['player_id']);
-            }
-        } else {
-            return response('Slot Taken', 200);
-        }
+        //     } else {
+        //         return $this->enterRaffle->enterRaffle($event->request['player_id']);
+        //     }
+        // } else {
+        //     return response('Slot Taken', 200);
+        // }
     }
 }
