@@ -14,4 +14,8 @@ class RaffleSlots extends Model
     public $timestamps      = false;
     protected $guarded      = [];
 
+    public function user() {
+        return $this->belongsTo(Player::class, 'player_id');
+    }
+
 }

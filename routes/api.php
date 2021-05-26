@@ -38,7 +38,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/raffles/taken/{raffle_id}',    'RafflesController@showTakenSlots');
     Route::get('/draw/raffle/{id}',             'RafflesController@shuffle');
 
-    Route::post('/take/raffle/',                'RafflesController@saveSelectedSlot');
+    Route::post('/take/raffle/slot',            'RafflesController@saveSelectedSlot');
     Route::post('/start/raffle/',               'RafflesController@startRaffle');
     Route::post('/end/raffle/',                 'RafflesController@endRaffle');
     Route::post('/add/raffle',                  'RafflesController@insertRaffleInfo')->middleware('auth:sanctum');

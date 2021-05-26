@@ -20,39 +20,15 @@ class RaffleEvent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets;
 
     public $request;
-    public $taken;
+    public $taken_slots;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($selectedSlot)
     {
-        $this->enterRaffle = new TicketController();
-        $this->request = $request;
-        $raffle_slots = RaffleSlots::where([
-            ['raffle_id', $request['raffle_id']],
-            ['slot_number', $request['slot_number']],
-            ['status', Config::get('constants.STATUS.ACTIVE')]
-        ])->first();
-
-        if($raffle_slots==null) {
-
-            $taken_slot = new RaffleSlots([
-                'raffle_id'     => $request['raffle_id'],
-                'player_id'     => $request['player_id'],
-                'slot_number'   => $request['slot_number']
-            ]);
-
-            $this->taken = $taken_slot;
-
-            $this->enterRaffle->enterRaffle($request['player_id']);
-
-                $taken_slot->save();
-
-        } else {
-            return response('Slot Taken', 200);
-        }
+        $this->taken_slots = $selectedSlot;
     }
 
     /**
@@ -62,7 +38,7 @@ class RaffleEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('raffle-'.$this->request['raffle_id']);
+        return new Channel('raffle-'.$this->taken_slots->raffle_id);
     }
 
     public function broadcastAs()
@@ -73,7 +49,7 @@ class RaffleEvent implements ShouldBroadcastNow
     public function broadcastWith()
     {
         return [
-            "taken_slot" => $this->taken,
+            "slot" => $this->taken_slots,
         ];
     }
 

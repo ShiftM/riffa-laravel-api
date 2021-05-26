@@ -27,10 +27,19 @@ class RafflesController extends Controller
     }
 
     public function showAllRaffles() {
-        $raffles = Raffles::with('schedule', 'charity', 'type')
+        $raffles = Raffles::with('schedule', 'charity', 'type', 'takenSlots', 'takenSlots.user')
                  ->where('status', Config::get('constants.STATUS.ACTIVE'))
                  ->get();
-
+        
+        for($i = 0; $i < count($raffles); $i++) {
+            if($raffles[$i]->takenSlots != null) {
+                for($j = 0; $j < count($raffles[$i]->takenSlots); $j++) {
+                   $raffles[$i]->takenSlots[$j]->user->profile = Config::get('constants.RIFFA_S3_URL.PROFILE').$raffles[$i]->takenSlots[$j]->user->profile;
+                   break;
+                }
+            }
+        }
+      
         // foreach($raffles as $raffle) {
         //     $prize = Prizes::where([
         //         ['prize_id', $raffle->prize_id]
@@ -180,12 +189,40 @@ class RafflesController extends Controller
     }
 
     public function saveSelectedSlot(Request $request) {
+        $raffleId = $request->raffleId;
+        $slotNumber = $request->slotNumber;
+        $playerId = $request->playerId;
+        $selectedSlot = '';
+        $slot = RaffleSlots::where([
+            ['raffle_id', $raffleId],
+            ['slot_number', $slotNumber]
+        ])->first();
 
-        //Fire the event
-        //Will save selected slots then automatic deduct of 1 ticket
-        //Will save also to transaction logs
-        RaffleEvent::dispatch($request->all());
+        if($slot == null) {
+            $selectedSlot = new RaffleSlots([
+                'raffle_id'     => $raffleId,
+                'player_id'     => $playerId,
+                'slot_number'   => $slotNumber
+            ]);
+            $selectedSlot->save();
 
+            // $selectedSlot = RaffleSlots::with(['user' => function($query) {
+            //     $query->where([
+            //         ['is_active', Config::get('constants.STATUS.ACTIVE')],
+            //         ['role', Config::get('constants.ROLE.USER')]
+            //     ]);
+            // }])->where([
+            //     ['raffle_id', $selectedSlot->raffle_id]
+            // ])->first();
+            // $selectedSlot->user->profile = Config::get('constants.RIFFA_S3_URL.PROFILE').$selectedSlot->user->profile;
+        }
+       
+        if($selectedSlot != null) {
+            //Fire the event
+            //Will save selected slots then automatic deduct of 1 ticket
+            //Will save also to transaction logs
+            RaffleEvent::dispatch($selectedSlot);
+        }
     }
 
     public function startRaffle(Request $request) {
