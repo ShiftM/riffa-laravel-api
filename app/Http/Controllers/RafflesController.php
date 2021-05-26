@@ -59,14 +59,11 @@ class RafflesController extends Controller
         );
     }
 
-    public function shuffle()
+    public function shuffle($raffleID)
     {
-        $dateToday = date('Y-m-d');
-        // get the raffle schedule today
-        $raffleSched = RafflesSchedule::whereRaw("FROM_UNIXTIME(schedule, '%Y-%m-%d') = '$dateToday'")->first();
         //Fire the event
         //Will draw winner then broadcast the result
-        DrawRaffle::dispatch($raffleSched);
+        DrawRaffle::dispatch($raffleID);
     }
 
     public function showRaffleInfo($id)
@@ -169,7 +166,8 @@ class RafflesController extends Controller
     public function showTakenSlots($id)
     {
         $raffle_slots = RaffleSlots::where([
-            ['raffle_id', $id]
+            'raffle_id' => $id,
+            'status' => Config::get('constants.STATUS.ACTIVE')
         ])->get();
 
 
@@ -207,11 +205,9 @@ class RafflesController extends Controller
 
         if($raffles = Raffles::with('schedule')->where([
             ['raffle_id', $request->raffle_id],
-            ['is_active', 1]
-        ])->update(['is_active' => 0])) {
-            if($this->giveConsolationCoins($request->raffle_id) == "Done"){
-                return response('Successful', 200);
-            }
+            ['status', Config::get('constants.STATUS.ACTIVE')]
+        ])->update(['status' => Config::get('constants.STATUS.INACTIVE')])) {
+            return response('Successful', 200);
         } else {
             return response('Failed/Already Updated', 200);
         }
@@ -220,10 +216,8 @@ class RafflesController extends Controller
 
     public function giveConsolationCoins($raffle_id) {
 
-        $raffle_slots = RaffleSlots::where([
-            ['raffle_id', $raffle_id],
-            ['is_winner', 0]
-        ])->get(DB::raw('DISTINCT(player_id)'));
+        $raffle_slots = RaffleSlots::whereRaw('player_id not in (select DISTINCT(player_id) from raffle_slots where is_winner = 1)')
+        ->get(DB::raw('DISTINCT(player_id)'));
 
         foreach($raffle_slots as $raffle_slot) {
             $player = Coins::where('player_id', $raffle_slot->player_id)->first();
@@ -241,7 +235,7 @@ class RafflesController extends Controller
             $ticket_transaction->save();
         }
 
-        return 'Done';
+        return 'Consolation Distributed';
 
     }
 

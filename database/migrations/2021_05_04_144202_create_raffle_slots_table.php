@@ -21,6 +21,7 @@ class CreateRaffleSlotsTable extends Migration
             $table->foreign('player_id')->references('player_id')->on('players');
             $table->integer('slot_number');
             $table->boolean('is_winner')->nullable()->default(0);
+            $table->boolean('status')->nullable()->default(1);
         });
     }
 

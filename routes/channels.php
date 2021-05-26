@@ -16,7 +16,3 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-
-Broadcast::channel('raffle.{raffle_id}', function ($user, $raffle_id) {
-    return true;
-});

@@ -13,6 +13,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Config;
 
 class RaffleEvent implements ShouldBroadcastNow
 {
@@ -31,10 +32,12 @@ class RaffleEvent implements ShouldBroadcastNow
         $this->request = $request;
         $raffle_slots = RaffleSlots::where([
             ['raffle_id', $request['raffle_id']],
-            ['slot_number', $request['slot_number']]
+            ['slot_number', $request['slot_number']],
+            ['status', Config::get('constants.STATUS.ACTIVE')]
         ])->first();
 
         if($raffle_slots==null) {
+
             $taken_slot = new RaffleSlots([
                 'raffle_id'     => $request['raffle_id'],
                 'player_id'     => $request['player_id'],
@@ -46,15 +49,7 @@ class RaffleEvent implements ShouldBroadcastNow
             $this->enterRaffle->enterRaffle($request['player_id']);
 
                 $taken_slot->save();
-        //             return response('Successful', 200);
-        //         }
-        //         else {
-        //             return response('Failed', 200);
-        //         }
 
-        //     } else {
-        //         return $this->enterRaffle->enterRaffle($request['player_id']);
-        //     }
         } else {
             return response('Slot Taken', 200);
         }
