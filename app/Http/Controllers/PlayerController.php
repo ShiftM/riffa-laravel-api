@@ -28,6 +28,11 @@ class PlayerController extends Controller
 
         $users = Player::with('ticket')->get();
 
+        for($i = 0; $i < count($users); $i++) {
+            if($users[$i]->profile != null) {
+                $users[$i]['profile'] = Config::get('constants.RIFFA_S3_URL.PROFILE').$users[$i]['profile'];
+            }
+        }
         return Response::json(
             [
                 'users' => $users
@@ -68,6 +73,7 @@ class PlayerController extends Controller
             'email'         => $request->email,
             'password'      => Hash::make($request->password),
             'role'          => Config::get('constants.ROLE.USER'),
+            'profile'       => Config::get('constants.ASSET_IMAGE.NO_IMG_DEFAULT'),
             'created_at'    => time()
         ]);
         $player->save();

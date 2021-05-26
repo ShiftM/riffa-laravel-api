@@ -12,5 +12,8 @@ return [
         'PENDING' => 0,
         'ACTIVE' => 1,
         'INACTIVE' => 2,
+    ],
+    'ASSET_IMAGE' => [
+        'NO_IMG_DEFAULT' => 'assets/no_img.png'
     ]
 ];

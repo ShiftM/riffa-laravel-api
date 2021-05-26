@@ -15,7 +15,7 @@ class Raffles extends Model
     protected $guarded      = [];
 
     public function schedule() {
-        return $this->belongsTo('App\Models\RafflesSchedule', 'raffle_id');
+        return $this->hasOne('App\Models\RafflesSchedule', 'raffle_id');
     }
 
     public function charity() {
@@ -24,5 +24,9 @@ class Raffles extends Model
 
     public function type() {
         return $this->belongsTo('App\Models\RaffleType', 'type_id');
+    }
+
+    public function takenSlots() {
+        return $this->hasMany(RaffleSlots::class, 'raffle_id');
     }
 }
